@@ -1,0 +1,80 @@
+#!/bin/sh
+
+export PATH=$PATH:/bin:/usr/bin:/usr/local/bin:${HOME}/.local/bin
+
+: '
+# rsync options source destination
+
+    -v : verbose
+    -r : copies data recursively (but don’t preserve timestamps and permission while transferring data.
+    -a : archive mode, which allows copying files recursively and it also preserves symbolic links, file permissions, user & group ownerships, and timestamps.
+    -z : compress file data.
+    -h : human-readable, output numbers in a human-readable format.
+    --progress : Shows Progress
+    --delete : to delete files from destination that are not in the source directory.
+    --exclude-from 'rsync_excludes.txt'
+    --delete-excluded : delete excluded files from destination
+    --remove-source-files : Automatically Delete source Files After Successful Transfer.
+    --dry-run : simulate
+'
+
+# ---------------------------------------------------
+
+# Mount mtp first
+aft-mtp-mount ${HOME}/mnt/sdcard/
+
+cd ${HOME}/mnt/sdcard/Internal" shared storage"
+
+# Directory to be backed up (source)
+#SOURCEDIR="$sdcard/Music $sdcard/DCIM $sdcard/Documents"
+
+# Destination Directory
+DESTINATIONDIR=/media/dhacommas/BoxIt/rsync/storage
+
+# excludes file - this contains a wildcard pattern per line of files to be excluded
+EXCLUDES=/media/dhacommas/BoxIt/rsync/rsync_excludes.txt
+
+# Argument
+OPT="-avh --progress --delete --delete-excluded --exclude-from=$EXCLUDES"
+
+
+while IFS= read -r file; do
+  rsync $OPT $file $DESTINATIONDIR/
+done < "/media/dhacommas/BoxIt/rsync/BackupDir.txt"
+
+#------------------------------------------------------------------------------------------------
+
+#TODO
+
+: '
+# Checks
+if [[ ! -d "${sdcard}" ]]; then
+  echo "ERROR: Backup destination is missing"
+  exit 1
+
+elif [[ ! -d "${DESTINATIONDIR}" ]]; then
+  echo "ERROR: Backup destination is missing"
+  exit 1
+
+elif [[ ! -s '${EXCLUDES}' ]]; then
+  echo "ERROR: rsync_excludes.txt is missing."
+  exit 1
+fi
+'
+
+
+: '
+    for d in $SOURCEDIR; do
+	rsync $OPT $d/ $DESTINATIONDIR/$d/
+    done
+'
+
+# rsync $OPT $SOURCEDIR $DESTINATIONDIR
+
+: '
+
+while IFS= read -r file; do
+  echo "Do something on $file ..."
+done < "filenames.txt"
+
+'
