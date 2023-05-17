@@ -1,2 +1,9 @@
 DCIM
+Documents
+Download
 Music
+MT2
+BoxIt
+Pictures
+Recordings
+Ringtones

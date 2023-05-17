@@ -1,2 +1,2 @@
-./Music/.thumbnails/*
-
+Music/.thumbnails
+Pictures/.thumbnails
