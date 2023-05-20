@@ -1,7 +1,13 @@
 #!/data/data/com.termux/files/home/local/bin/bash
 #!/data/data/com.termux/files/usr/bin/bash
 
-export PATH=$PATH:/data/data/com.termux/files/home/local/bin:/sdcard/
+# A shell script to backup android internal storage data to external drive using termux.
+#
+# v1.1
+# dhacommas
+
+export PATH=$PATH:/data/data/com.termux/files/home/local/bin:/sdcard
+
 : '
 # rsync options source destination
 
@@ -20,13 +26,10 @@ export PATH=$PATH:/data/data/com.termux/files/home/local/bin:/sdcard/
 
 # ---------------------------------------------------
 
-# Directory to be backed up (source)
-#SOURCEDIR="$sdcard/Music $sdcard/DCIM $sdcard/Documents"
-
 # make sure we are in sdcard directory
 cd /sdcard
 
-# config directory (MODIFY AS PER NEED)
+# config directory in sdcard path (MODIFY AS PER NEED)
 configDIR=config/rsync
 
 if [[ -d $configDIR ]]; then
@@ -37,29 +40,55 @@ fi
 
 ##(MODIFY AS PER NEED)##
 
+#External Drive
+ExtDrive=/storage/863D-B702
+
 # Destination Directory
-DESTINATIONDIR=/storage/863D-B702/rsync/storage
+DESTINATIONDIR=$ExtDrive/rsync/storage
 
 # excludes file - this contains a wildcard pattern per line of files to be excluded
-EXCLUDES="$configDIR/rsync_excludes.txt"
+EXCLUDES=$configDIR/rsync_excludes.txt
 
 # BackupDir.txt file - this contains per line of directories to be backed up
 BackupDirFile=$configDIR/BackupDir.txt
 
 # Checks
-if [[ ! -d $DESTINATIONDIR ]]; then
-  echo "ERROR: Backup destination is missing"
+if [[ ! -d $ExtDrive ]]; then
+  echo "ERROR: External Drive is missing"
   exit 1
+else
+  echo "External Drive found."
 
-elif [[ ! -s $EXCLUDES ]]; then
+if [[ -d $DESTINATIONDIR ]]; then
+  echo "Backup destination found."
+else
+  echo "Backup destination is missing"
+  echo "Creating Backup destination directory"
+  mkdir -pv $DESTINATIONDIR
+fi
+
+if [[ ! -d $DESTINATIONDIR ]]; then
+  echo "ERROR: Backup destination directory is missing"
+  exit 1
+else
+  echo "Backup destination directory found"
+fi
+
+if [[ ! -s $EXCLUDES ]]; then
   echo "ERROR: rsync_excludes.txt is missing."
   exit 1
+else
+  echo "rsync_excludes.txt found." 
 fi
 
 elif [[ ! -s $BackupDirFile ]]; then
   echo "ERROR: BackupDir.txt is missing."
   exit 1
+else
+  echo "BackupDir.txt found." 
 fi
+
+echo "Beginning backup..."
 
 # Argument
 OPT="-avh --progress --delete --delete-excluded --exclude-from=$EXCLUDES"
@@ -71,6 +100,10 @@ done < "$BackupDirFile"
 
 #------------------------------------------------------------------------------------------------
 
+# Directory to be backed up (source)
+#SOURCEDIR="$sdcard/Music $sdcard/DCIM $sdcard/Documents"
+
+# rsync $OPT $SOURCEDIR $DESTINATIONDIR
 
 : '
     for d in $SOURCEDIR; do
@@ -78,12 +111,8 @@ done < "$BackupDirFile"
     done
 '
 
-# rsync $OPT $SOURCEDIR $DESTINATIONDIR
-
 : '
-
 while IFS= read -r file; do
   echo "Do something on $file ..."
 done < "filenames.txt"
-
 '
