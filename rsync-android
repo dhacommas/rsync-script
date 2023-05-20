@@ -39,7 +39,7 @@ OPT="-avh --progress --delete --delete-excluded --exclude-from=$EXCLUDES"
 
 
 while IFS= read -r file; do
-  rsync $OPT $file $DESTINATIONDIR/
+  rsync $OPT "$file" $DESTINATIONDIR
 done < "/media/dhacommas/BoxIt/rsync/BackupDir.txt"
 
 #------------------------------------------------------------------------------------------------

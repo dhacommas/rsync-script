@@ -1,8 +1,9 @@
+Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Documents
+Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Images
 DCIM
 Documents
 Download
 Music
-MT2
 BoxIt
 Pictures
 Recordings

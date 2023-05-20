@@ -1,2 +1,6 @@
+Download/1DMP/Videos
+Download/1DMP/.adblocker_1dm
+Download/1DMP/.hidden
+Download/1DMP/Torrents
 Music/.thumbnails
 Pictures/.thumbnails
