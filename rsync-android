@@ -1,4 +1,13 @@
-#!/bin/sh
+#!/bin/bash
+
+# A shell script to backup android internal storage data to external drive.
+#
+#   uses "Android File Transfer For Linux" (https://whoozle.github.io/android-file-transfer-linux/) to mount Android internal storage as
+#   mtp. make sure to configure it first.
+#
+# rsync-android
+# v1.1
+# dhacommas
 
 export PATH=$PATH:/bin:/usr/bin:/usr/local/bin:${HOME}/.local/bin
 
@@ -20,19 +29,76 @@ export PATH=$PATH:/bin:/usr/bin:/usr/local/bin:${HOME}/.local/bin
 
 # ---------------------------------------------------
 
-# Mount mtp first
-aft-mtp-mount ${HOME}/mnt/sdcard/
+# mtp directory (MODIFY AS PER NEED)
+mtpDIR=~/mnt/sdcard
+mountCheck=$mtpDIR/Internal" shared storage"
 
-cd ${HOME}/mnt/sdcard/Internal" shared storage"
+if [[ -d $mtpDIR ]]; then
+    echo "mtp directory exists. Continuing..."
+else
+    mkdir -pv $mtpDIR
+fi
 
-# Directory to be backed up (source)
-#SOURCEDIR="$sdcard/Music $sdcard/DCIM $sdcard/Documents"
+#check if device is already mounted or not; if not, mount.
+if [[ -d $mountCheck ]]; then
+    echo "Device is already mounted. Continuing..."
+else
+    aft-mtp-mount $mtpDIR
+fi
+
+# check if device is successfully mounted or not
+
+if [[ ! -d $mountCheck ]]; then
+    echo "Device is failed to mount. Exiting for your own good..."
+    exit 1
+else
+    echo "Device is successfully mounted. Beginning..."
+    cd $mtpDIR/Internal" shared storage"
+fi
+
+##(MODIFY AS PER NEED)##
+
+#External Drive
+ExtDrive=/media/dhacommas/BoxIt/rsync
 
 # Destination Directory
-DESTINATIONDIR=/media/dhacommas/BoxIt/rsync/storage
+DESTINATIONDIR=$ExtDrive/storage
 
 # excludes file - this contains a wildcard pattern per line of files to be excluded
-EXCLUDES=/media/dhacommas/BoxIt/rsync/rsync_excludes.txt
+EXCLUDES=$ExtDrive/rsync_excludes.txt
+
+# BackupDir.txt file - this contains per line of directories to be backed up
+BackupDirFile=$ExtDrive/BackupDir.txt
+
+if [[ -d $DESTINATIONDIR ]]; then
+    echo "Destination directory exists."
+else
+    mkdir -pv $DESTINATIONDIR
+fi
+
+# Checks
+if [[ ! -d $DESTINATIONDIR ]]; then
+  echo "ERROR: Backup destination is missing"
+  exit 1
+else
+  echo "Backup destination found."
+fi
+
+if [[ ! -s $EXCLUDES ]]; then
+  echo "ERROR: rsync_excludes.txt is missing."
+  exit 1
+else
+  echo "rsync_excludes.txt found." 
+fi
+
+if [[ ! -s $BackupDirFile ]]; then
+  echo "ERROR: BackupDir.txt is missing."
+  exit 1
+else
+  echo "BackupDir.txt found." 
+fi
+
+echo "Beginning backup..."
 
 # Argument
 OPT="-avh --progress --delete --delete-excluded --exclude-from=$EXCLUDES"
@@ -40,41 +106,24 @@ OPT="-avh --progress --delete --delete-excluded --exclude-from=$EXCLUDES"
 
 while IFS= read -r file; do
   rsync $OPT "$file" $DESTINATIONDIR
-done < "/media/dhacommas/BoxIt/rsync/BackupDir.txt"
+done < "$BackupDirFile"
 
 #------------------------------------------------------------------------------------------------
 
-#TODO
+# rsync $OPT $SOURCEDIR $DESTINATIONDIR
 
 : '
-# Checks
-if [[ ! -d "${sdcard}" ]]; then
-  echo "ERROR: Backup destination is missing"
-  exit 1
-
-elif [[ ! -d "${DESTINATIONDIR}" ]]; then
-  echo "ERROR: Backup destination is missing"
-  exit 1
-
-elif [[ ! -s '${EXCLUDES}' ]]; then
-  echo "ERROR: rsync_excludes.txt is missing."
-  exit 1
-fi
-'
+# Directory to be backed up (source)
+#SOURCEDIR="$sdcard/Music $sdcard/DCIM $sdcard/Documents"
 
 
-: '
     for d in $SOURCEDIR; do
 	rsync $OPT $d/ $DESTINATIONDIR/$d/
     done
 '
 
-# rsync $OPT $SOURCEDIR $DESTINATIONDIR
-
 : '
-
 while IFS= read -r file; do
   echo "Do something on $file ..."
 done < "filenames.txt"
-
 '
