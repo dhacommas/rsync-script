@@ -1,5 +1,6 @@
 Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Documents
 Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Images
+apk
 DCIM
 Documents
 Download
@@ -8,3 +9,4 @@ BoxIt
 Pictures
 Recordings
 Ringtones
+zExtras

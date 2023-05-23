@@ -98,11 +98,10 @@ else
   echo "BackupDir.txt found." 
 fi
 
-echo "Beginning backup..."
-
 # Argument
 OPT="-avh --progress --delete --delete-excluded --exclude-from=$EXCLUDES"
 
+echo Initiating Backup...
 
 while IFS= read -r file; do
   rsync $OPT "$file" $DESTINATIONDIR
