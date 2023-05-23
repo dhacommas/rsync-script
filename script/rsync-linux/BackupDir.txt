@@ -1,0 +1,14 @@
+.bash_aliases
+.bashrc
+.bashrc.bak
+.config
+.gitconfig
+.gnupg
+.local
+.profile
+.ssh
+Desktop
+Documents
+Downloads
+gitrepo
+Pictures

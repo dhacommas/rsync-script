@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# A shell script to backup linux machine data to external drive.
+#
+#
+# v1.1
+# dhacommas
+
+export PATH=$PATH:/bin:/usr/bin:/usr/local/bin:${HOME}/.local/bin
+
+: '
+# rsync options source destination
+
+    -v : verbose
+    -r : copies data recursively (but don’t preserve timestamps and permission while transferring data.
+    -a : archive mode, which allows copying files recursively and it also preserves symbolic links, file permissions, user & group ownerships, and timestamps.
+    -z : compress file data.
+    -h : human-readable, output numbers in a human-readable format.
+    --progress : Shows Progress
+    --delete : to delete files from destination that are not in the source directory.
+    --exclude-from 'rsync_excludes.txt'
+    --delete-excluded : delete excluded files from destination
+    --remove-source-files : Automatically Delete source Files After Successful Transfer.
+    --dry-run : simulate
+'
+
+# ---------------------------------------------------
+
+##(MODIFY AS PER NEED)##
+
+#External Drive
+ExtDrive=/media/dhacommas/BoxIt/rsync
+
+# Destination Directory
+DESTINATIONDIR=$ExtDrive/linux
+
+# excludes file - this contains a wildcard pattern per line of files to be excluded
+EXCLUDES=$ExtDrive/linux/rsync-config/rsync_excludes.txt
+
+# BackupDir.txt file - this contains per line of directories to be backed up
+BackupDirFile=$ExtDrive/linux/rsync-config/BackupDir.txt
+
+if [[ -d $DESTINATIONDIR ]]; then
+    echo "Destination directory exists."
+else
+    mkdir -pv $DESTINATIONDIR
+fi
+
+# Checks
+if [[ ! -d $DESTINATIONDIR ]]; then
+  echo "ERROR: Backup destination is missing"
+  exit 1
+else
+  echo "Backup destination found."
+fi
+
+if [[ ! -s $EXCLUDES ]]; then
+  echo "ERROR: rsync_excludes.txt is missing."
+  exit 1
+else
+  echo "rsync_excludes.txt found." 
+fi
+
+if [[ ! -s $BackupDirFile ]]; then
+  echo "ERROR: BackupDir.txt is missing."
+  exit 1
+else
+  echo "BackupDir.txt found." 
+fi
+
+# Argument
+OPT="-avh --progress --delete --delete-excluded --exclude-from=$EXCLUDES"
+
+echo Initiating Backup...
+
+while IFS= read -r file; do
+  rsync $OPT "$file" $DESTINATIONDIR
+done < "$BackupDirFile"
+
+#------------------------------------------------------------------------------------------------
+
+# rsync $OPT $SOURCEDIR $DESTINATIONDIR
+
+: '
+# Directory to be backed up (source)
+#SOURCEDIR="$sdcard/Music $sdcard/DCIM $sdcard/Documents"
+
+
+    for d in $SOURCEDIR; do
+	rsync $OPT $d/ $DESTINATIONDIR/$d/
+    done
+'
+
+: '
+while IFS= read -r file; do
+  echo "Do something on $file ..."
+done < "filenames.txt"
+'
