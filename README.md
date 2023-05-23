@@ -31,9 +31,9 @@ Before executing the script, Replace the config variables as per your needs:
 
 `DESTINATIONDIR` : Destination path in External Drive
 
-`EXCLUDES` : excludes file.  [`rsync_excludes.txt`](https://github.com/dhacommas/rsync-script/blob/main/rsync_excludes.txt)- this contains a wildcard pattern per line of files to be excluded.
+`EXCLUDES` : excludes file.  [`rsync_excludes.txt`](https://github.com/dhacommas/rsync-script/blob/main/script/rsync-android/rsync_excludes.txt)- this contains a wildcard pattern per line of files to be excluded.
 
-`BackupDirFile` : [BackupDir.txt file](https://github.com/dhacommas/rsync-script/blob/main/BackupDir.txt) - this contains per line of directories to be backed up.
+`BackupDirFile` : [BackupDir.txt file](https://github.com/dhacommas/rsync-script/blob/main/script/rsync-android/BackupDir.txt) - this contains per line of directories to be backed up.
 
 
 2) `rsync-termux` : A shell script to backup android internal storage data to external drive via `termux`.
@@ -56,10 +56,22 @@ Before executing the script, Replace the config variables as per your needs:
 
 `DESTINATIONDIR` : Destination path in External Drive
 
-`EXCLUDES` : excludes file. [`rsync_excludes.txt`](https://github.com/dhacommas/rsync-script/blob/main/rsync_excludes.txt)- this contains a wildcard pattern per line of files to be excluded.
+`EXCLUDES` : excludes file. [`rsync_excludes.txt`](https://github.com/dhacommas/rsync-script/blob/main/script/rsync-termux/rsync_excludes.txt)- this contains a wildcard pattern per line of files to be excluded.
 
-`BackupDirFile` : [`BackupDir.txt file`](https://github.com/dhacommas/rsync-script/blob/main/BackupDir.txt) - this contains per line of directories to be backed up.
+`BackupDirFile` : [`BackupDir.txt file`](https://github.com/dhacommas/rsync-script/blob/main/script/rsync-termux/BackupDir.txt) - this contains per line of directories to be backed up.
 
+3) `rsync-linux` : 
+A shell script to backup linux machine data to external drive.
+
+Before executing the script, Replace the config variables as per your needs:
+
+`ExtDrive` : Path of External Drive
+
+`DESTINATIONDIR` : Destination path in External Drive
+
+`EXCLUDES` : excludes file.  [`rsync_excludes.txt`](https://github.com/dhacommas/rsync-script/blob/main/script/rsync-linux/rsync_excludes.txt)- this contains a wildcard pattern per line of files to be excluded.
+
+`BackupDirFile` : [BackupDir.txt file](https://github.com/dhacommas/rsync-script/blob/main/script/rsync-linux/BackupDir.txt) - this contains per line of directories to be backed up.
     
 ## Installation
 
@@ -100,6 +112,6 @@ If you find a bug or have a suggestion for a new feature, please open an issue o
 
 This repository is licensed under the [GNU General Public License v3.0](https://github.com/dhacommas/rsync-script/blob/main/LICENSE)
 
-`dhacommas`
+`@dhacommas`
 
-`EphemeralG`
+`@EphemeralG`
