@@ -3,7 +3,7 @@
 # A shell script to backup linux machine data to external drive.
 #
 # rsync-linux
-# v1.1
+# v1.2
 # dhacommas
 
 export PATH=$PATH:/bin:/usr/bin:/usr/local/bin:${HOME}/.local/bin

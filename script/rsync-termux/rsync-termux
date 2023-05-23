@@ -3,7 +3,8 @@
 
 # A shell script to backup android internal storage data to external drive using termux.
 #
-# v1.1
+# rsync-termux
+# v1.2
 # dhacommas
 
 export PATH=$PATH:/data/data/com.termux/files/home/local/bin:/sdcard
